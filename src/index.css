@@ -116,11 +116,9 @@ img {
     .container {
         width: var(--container-width-md);
     }
-
     section {
         margin-top: 6rem;
     }
-
 }
 
 /*-------------------------------Media Queries (Mobile)---------------*/
@@ -129,11 +127,9 @@ img {
     .container {
         width: var(--container-width-sm);
     }
-
     section > h2 {
         margin-top: 2rem;
     }
-
 }
 
 
