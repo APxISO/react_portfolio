@@ -71,27 +71,10 @@ const Portfolio = () => {
  </div>
 </div>
     </article>
-
-
-        )
-
-      }  )
-
-    }
-    
-
-
-
-
-
-
-      </div>
-
-
-
-
-    </section>
-  )
+)})}
+</div>
+</section>
+)
 }
 
 export default Portfolio
