@@ -12,31 +12,35 @@ const Testimonials = () => {
   <article className='testimonial'>
 <div className="client__avatar">
   <img src={avatar1} alt='avatar1'/>
-  <h5 className='client__name'>Client 1</h5>
+  </div>
+<h5 className='client__name'>Client 1</h5>
   <small className='client__review'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia, culpa molestiae. Quisquam eveniet sit deserunt ex vel vero tempora aperiam. Molestias, officiis voluptatibus. Et dolorum assumenda ea laudantium corrupti. Reprehenderit!</small>
-</div>
-  </article>
-  <article className='testimonial'>
-<div className="client__avatar">
-  <img src={avatar2} alt='avatar2'/>
-  <h5 className='client__name'>Client 1</h5>
-  <small className='client__review'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia, culpa molestiae. Quisquam eveniet sit deserunt ex vel vero tempora aperiam. Molestias, officiis voluptatibus. Et dolorum assumenda ea laudantium corrupti. Reprehenderit!</small>
-</div>
   </article>
   <article className='testimonial'>
 <div className="client__avatar">
   <img src={avatar1} alt='avatar1'/>
-  <h5 className='client__name'>Client 1</h5>
+  </div>
+<h5 className='client__name'>Client 1</h5>
   <small className='client__review'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia, culpa molestiae. Quisquam eveniet sit deserunt ex vel vero tempora aperiam. Molestias, officiis voluptatibus. Et dolorum assumenda ea laudantium corrupti. Reprehenderit!</small>
-</div>
   </article>
+  
   <article className='testimonial'>
 <div className="client__avatar">
-  <img src={avatar2} alt='avatar2'/>
-  <h5 className='client__name'>Client 1</h5>
+  <img src={avatar1} alt='avatar1'/>
+  </div>
+<h5 className='client__name'>Client 1</h5>
   <small className='client__review'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia, culpa molestiae. Quisquam eveniet sit deserunt ex vel vero tempora aperiam. Molestias, officiis voluptatibus. Et dolorum assumenda ea laudantium corrupti. Reprehenderit!</small>
-</div>
   </article>
+  
+  <article className='testimonial'>
+<div className="client__avatar">
+  <img src={avatar1} alt='avatar1'/>
+  </div>
+<h5 className='client__name'>Client 1</h5>
+  <small className='client__review'>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quia, culpa molestiae. Quisquam eveniet sit deserunt ex vel vero tempora aperiam. Molestias, officiis voluptatibus. Et dolorum assumenda ea laudantium corrupti. Reprehenderit!</small>
+  </article>
+  
+  
 </div>
 
 
