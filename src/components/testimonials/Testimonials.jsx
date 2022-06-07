@@ -9,8 +9,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-
-
 // import required modules
 import { Navigation, Pagination } from "swiper";
 
@@ -42,8 +40,6 @@ const data = [
 
 
 
-
-
 const Testimonials = () => {
   return (
     <section id='testimonials'>
@@ -61,19 +57,10 @@ return (
   <small className='client__review'>{review}</small>
   </SwiperSlide>
 )
-
-
-})
-
-  }
-  
-  
+})}
 </Swiper>
-
-
-
-    </section>
-  )
+</section>
+)
 }
 
 export default Testimonials
