@@ -19,10 +19,7 @@ const Contact = () => {
       }, (error) => {
           console.log(error.text);
       });
-
       e.target.reset()
-
-
     };
 
 
@@ -61,11 +58,7 @@ const Contact = () => {
           <textarea name='message' rows='7' placeholder='Your Message' required/>
           <button type='submit' className='btn btn-primary'>Send Message</button>
         </form>
-
-
       </div>
-
-
     </section>
   )
   }
