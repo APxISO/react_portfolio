@@ -7,20 +7,17 @@ import ME from '../../assets/avatarM2.png'
 const Header = () => {
   return (
     <header>
-      <div className="container header_container">
+      <section className="container header_container">
     <h5>Hello I'm </h5>
     <h1>Adam</h1>
     <h5 className='text-light'>Fullstack Developer</h5>
     <CTA/>
     <HeaderSocials/>
-
-
     <div className='me'>
       <img src={ME} alt=''/>
     </div>
     <a href='#contact' className='scroll__down'>Scroll Down</a>
-
-      </div>
+      </section>
 
       </header>
   )
