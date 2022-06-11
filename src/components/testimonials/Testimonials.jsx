@@ -43,7 +43,7 @@ const data = [
 const Testimonials = () => {
   return (
     <section id='testimonials'>
-<h5>Reviews From Clients</h5>
+<h5>Recent Reviews</h5>
 <h2>Testimonials</h2>
 <Swiper pagination={true} navigation={true} modules={[Pagination, Navigation]} className="container testimonials__container">
   {
