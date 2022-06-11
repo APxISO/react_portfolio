@@ -43,7 +43,7 @@ body {
 
 .container {
     width: var(--container-width-lg);
-    margin: 0;
+    margin: 0 auto;
 }
 
 h1,h2,h3,h4,h5 {
@@ -127,7 +127,7 @@ img {
         width: var(--container-width-sm);
     }
     section > h2 {
-        margin-top: 2rem;
+        margin-bottom: 2rem;
     }
 }
 
