@@ -3,7 +3,7 @@ import './about.css'
 import {FaAward} from 'react-icons/fa'
 import {FiUsers} from 'react-icons/fi'
 import {VscFolderLibrary} from 'react-icons/vsc'
-import ME from '../../assets/avatarM.png'
+import ME from '../../assets/APSelfie-removebg.png'
 
 
 const About = () => {
