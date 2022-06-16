@@ -3,7 +3,8 @@ import './about.css'
 import {FaAward} from 'react-icons/fa'
 import {FiUsers} from 'react-icons/fi'
 import {VscFolderLibrary} from 'react-icons/vsc'
-import ME from '../../assets/APSelfie-removebg.png'
+import ME from '../../assets/MEpic5_primarybg.png'
+import ME2 from '../../assets/MEpic6-primarybg.png'
 
 
 const About = () => {
@@ -14,7 +15,9 @@ const About = () => {
     <div className='container about__container'>
     <div className="about__me">
     <div className="about__me-image">
-      <img src={ME} alt='About Image'/>
+      <img className='top' src={ME} alt='About Image'/>
+      <img className='bottom' src={ME2} alt='About Image2'/>
+      
     </div>
     </div>
 <div className="about__content">
