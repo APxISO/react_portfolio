@@ -1,7 +1,9 @@
 import React from 'react'
 import './testimonials.css'
-import avatar1 from '../../assets/avatar1.png'
-import avatar2 from '../../assets/avatar2.png'
+import avatar1 from '../../assets/avatar1.jpg'
+import avatar2 from '../../assets/avatar2.jpg'
+import avatar3 from '../../assets/avatar3.jpg'
+import avatar4 from '../../assets/avatar4.jpg'
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -17,23 +19,23 @@ const data = [
 
   {
     avatar: avatar1,
-    name: 'Tina Snow',
-    review: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat adipisci quam a? In fugit neque atque, ea accusamus maxime expedita architecto error molestiae eveniet dicta quisquam quaerat cupiditate voluptates consequatur!'
+    name: 'Dwayne Carter Jr.',
+    review: 'Professional, responsive, and able to keep up with ever-changing demand and tight deadlines: Thats how I would describe Adam. When it comes to web development, youll definitely get the 5-star treatment from the Adam!'
   },
   {
     avatar: avatar2,
-    name: 'Tina Snow',
-    review: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat adipisci quam a? In fugit neque atque, ea accusamus maxime expedita architecto error molestiae eveniet dicta quisquam quaerat cupiditate voluptates consequatur!'
+    name: 'Amala Zandile Dlamini',
+    review: 'Adam and his team at OpEx whipped my prehistoric website into shape in no time! I was excited by the results and am proud to direct clients to my website once again.'
   },
   {
-    avatar: avatar1,
-    name: 'Tina Snow',
-    review: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat adipisci quam a? In fugit neque atque, ea accusamus maxime expedita architecto error molestiae eveniet dicta quisquam quaerat cupiditate voluptates consequatur!'
+    avatar: avatar3,
+    name: 'Belcalis Almánzar',
+    review: 'Adam has been an integral part of our re-branding success. We have seen a notable increase in organic leads since we began working with him in 2018.'
   },
   {
-    avatar: avatar2,
-    name: 'Tina Snow',
-    review: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat adipisci quam a? In fugit neque atque, ea accusamus maxime expedita architecto error molestiae eveniet dicta quisquam quaerat cupiditate voluptates consequatur!'
+    avatar: avatar4,
+    name: 'Radric Davis',
+    review: 'My busy schedule leaves little, if any, time for blogging and social media. Adam has been a huge part of helping me grow my business through organic search and content marketing.”'
   },
 
 ]
