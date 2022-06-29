@@ -39,7 +39,7 @@ const About = () => {
   </article>
 </div>
 <p>
-A highly motivated Software Developer with experience in all facets of Full-Stack development including back end, front end, and databases. Skilled with object-oriented programming, parallel programming, developing, testing and debugging code, designing user interfaces, and solving challenging programming problems. A life-long learner, very enthusiastic about the process of producing real, useful, and maintainable applications to ensure optimal user experience..
+A highly motivated Software Developer with experience in all facets of Full-Stack development including back end, front end, and databases. Skilled with object-oriented programming, parallel programming, developing, testing and debugging code, designing user interfaces, and solving challenging programming problems. A life-long learner, very enthusiastic about the process of producing real, useful, and maintainable applications to ensure optimal user experience...
 </p>
 <a href='#contact' className='btn btn-primary'>Let's Talk!</a>
 </div>
