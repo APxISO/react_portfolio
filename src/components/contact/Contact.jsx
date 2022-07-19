@@ -13,7 +13,7 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_venlqrr', 'template_ucvikpc', form.current, 'URpG-f3tqH_Fh7F-r')
+    emailjs.sendForm('service_qj2rpof', 'template_ucvikpc', form.current, 'URpG-f3tqH_Fh7F-r')
       .then((result) => {
           console.log(result.text);
       }, (error) => {
@@ -32,8 +32,8 @@ const Contact = () => {
           <article className='contact__option'>
             <MdOutlineMail className='contact__option-icon'/>
             <h4>Email</h4>
-            <h5>AMPerez0208@gmail.com</h5>
-            <a href='mailto:AMPerez0208@gmail.com' target='_blank'>Send a Message</a>
+            <h5>AdamPerez.Dev@gmail.com</h5>
+            <a href='mailto:AdamPerez.Dev@gmail.com' target='_blank'>Send a Message</a>
           </article>
 
           <article className='contact__option'>
