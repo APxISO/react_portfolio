@@ -26,27 +26,7 @@ demo: 'https://dribbble.com/shots/17428236-Eclipse-Figma-dashboard-UI-kit-for-da
     github: 'https://github.com',
     demo: 'https://dribbble.com/shots/17393923-Eclipse-Figma-dashboard-UI-kit-for-data-design-web-apps'
   },
-  {
-      id: 4,
-      image: 'https://cdn.dribbble.com/users/1187002/screenshots/17393884/media/32bf8ab4cf513afcfbfb92f0c44549df.png?compress=1&resize=1200x900&vertical=top',
-      title: "",
-      github: 'https://github.com',
-      demo: 'https://dribbble.com/shots/17393884-Orion-UI-kit-Charts-templates-infographics-in-Figma'
-     },
-      {
-        id: 5,
-        image: 'https://cdn.dribbble.com/users/1187002/screenshots/17393868/media/fe02763b62c2fecd3df7a7bd49e871ac.png?compress=1&resize=1200x900&vertical=top',
-        title: "",
-        github: 'https://github.com',
-        demo: 'https://dribbble.com/shots/17393868-Orion-UI-kit-Charts-templates-infographics-in-Figma'
-        },
-        {
-          id: 6,
-          image: 'https://cdn.dribbble.com/users/1187002/screenshots/17428282/media/0d5855f8b761e36da4537e18d75166ba.jpg?compress=1&resize=1200x900&vertical=top',
-          title: "",
-          github: 'https://github.com',
-          demo: 'https://dribbble.com/shots/17428282-Orion-UI-kit-Charts-templates-infographics-in-Figma'
-          },
+  
 
 ]
 
