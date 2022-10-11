@@ -1,5 +1,7 @@
 import React from 'react'
 import './portfolio.css'
+import FeetHeatSS from "../../assets/FeetHeatSS.png"
+
 
 
 
@@ -7,24 +9,24 @@ const data = [
 
 {
 id: 1,
-image: 'https://cdn.dribbble.com/users/1187002/screenshots/17428236/media/30c717c2e5e95c27788b501fb752b0f1.jpg?compress=1&resize=1200x900&vertical=top',
-title: "",
-github: 'https://github.com',
-demo: 'https://dribbble.com/shots/17428236-Eclipse-Figma-dashboard-UI-kit-for-data-design-web-apps'
+image: FeetHeatSS,
+title: "Feet Heat",
+github: '',
+demo: 'https://feet-heat.herokuapp.com/'
 },
 {
   id: 2,
-  image: 'https://cdn.dribbble.com/users/1187002/screenshots/17393929/media/7847b2a32905ee720a7097ce408674bc.jpg?compress=1&resize=1200x900&vertical=top',
-  title: "",
-  github: 'https://github.com',
-  demo: 'https://dribbble.com/shots/17393929-Eclipse-Figma-dashboard-UI-kit-for-data-design-web-apps'
+  image: 'https://img.freepik.com/free-vector/neon-style-coming-soon-glowing-background-design_1017-25516.jpg?w=2000',
+  title: "FitnessTrac.kr ",
+  github: '',
+  demo: ''
   },
   {
     id: 3,
-    image: 'https://cdn.dribbble.com/users/1187002/screenshots/17393923/media/d38ffaf935d63b1eff14beae06053756.jpg?compress=1&resize=1200x900&vertical=top',
-    title: "",
-    github: 'https://github.com',
-    demo: 'https://dribbble.com/shots/17393923-Eclipse-Figma-dashboard-UI-kit-for-data-design-web-apps'
+    image: 'https://img.freepik.com/free-vector/neon-style-coming-soon-glowing-background-design_1017-25516.jpg?w=2000',
+    title: "Stranger's Things (Craig's List Clone)",
+    github: '',
+    demo: ''
   },
   
 

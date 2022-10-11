@@ -3,7 +3,6 @@ import './about.css'
 import {FaAward} from 'react-icons/fa'
 import {FiUsers} from 'react-icons/fi'
 import {VscFolderLibrary} from 'react-icons/vsc'
-import ME from '../../assets/MEpic5_primarybg.png'
 import ME2 from '../../assets/MEpic6-primarybg.png'
 
 
@@ -15,8 +14,7 @@ const About = () => {
     <div className='container about__container'>
     <div className="about__me">
     <div className="about__me-image">
-      {/* <img className='top' src={ME} alt='About Image'/> */}
-      <img className='bottom' src={ME2} alt='About Image2'/>
+    <img className='bottom' src={ME2} alt='About Image2'/>
       
     </div>
     </div>
@@ -30,12 +28,12 @@ const About = () => {
   <article className='about__card'>
 <FiUsers className='about__icon'/>
 <h5>Clients</h5>
-<small>15+ Worldwide</small>
+<small>10+ Worldwide</small>
   </article>
   <article className='about__card'>
 <VscFolderLibrary className='about__icon'/>
 <h5>Projects</h5>
-<small>25+ Completed Projects</small>
+<small>10+ Completed Projects</small>
   </article>
 </div>
 <p>
