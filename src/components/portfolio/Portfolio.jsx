@@ -1,6 +1,7 @@
 import React from 'react'
 import './portfolio.css'
 import FeetHeatSS from "../../assets/FeetHeatSS.png"
+import QuoteGenerator from "../../assets/quoteGenerator.png"
 
 
 
@@ -16,15 +17,15 @@ demo: 'https://feet-heat.herokuapp.com/'
 },
 {
   id: 2,
-  image: 'https://img.freepik.com/free-vector/neon-style-coming-soon-glowing-background-design_1017-25516.jpg?w=2000',
-  title: "FitnessTrac.kr ",
-  github: '',
-  demo: ''
+  image: QuoteGenerator,
+  title: "Quote Generator",
+  github: 'https://github.com/APxISO/quote-generator',
+  demo: 'https://apxiso.github.io/quote-generator/'
   },
   {
     id: 3,
     image: 'https://img.freepik.com/free-vector/neon-style-coming-soon-glowing-background-design_1017-25516.jpg?w=2000',
-    title: "Stranger's Things (Craig's List Clone)",
+    title: "FitnessTrac.kr",
     github: '',
     demo: ''
   },
