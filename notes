@@ -1,6 +1,46 @@
 sidebar.js
 
-return (
+import { useState } from "react";
+import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Link } from "react-router-dom";
+import "react-pro-sidebar/dist/css/styles.css";
+import { tokens } from "../../theme";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
+import PeopleIcon from '@mui/icons-material/People';
+import LoginIcon from '@mui/icons-material/Login';
+
+const Item = ({ title, to, icon, selected, setSelected }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  return (
+    <MenuItem
+      active={selected === title}
+      style={{
+        color: colors.grey[100],
+      }}
+      onClick={() => setSelected(title)}
+      icon={icon}
+    >
+      <Typography>{title}</Typography>
+      <Link to={to} />
+    </MenuItem>
+  );
+};
+
+const Sidebar = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [selected, setSelected] = useState("My Task List");
+  
+
+  return (
     <Box
       sx={{
         "& .pro-sidebar-inner": {
@@ -76,6 +116,11 @@ return (
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+
+
+
+
+            
             
             <Item
               title="My Task List"
