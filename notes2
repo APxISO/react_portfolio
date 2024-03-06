@@ -1,0 +1,182 @@
+// --client/src/global/Sidebar.jsx--
+
+import React, { useState } from 'react';
+import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import 'react-pro-sidebar/dist/css/styles.css';
+import { tokens } from '../../theme';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import PeopleIcon from '@mui/icons-material/People';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
+import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
+import LoginIcon from '@mui/icons-material/Login';
+
+// Define the Item component for rendering each menu item
+const Item = ({ title, to, icon, selected, setSelected, isVisible }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  return isVisible ? (
+    <MenuItem
+      active={selected === title}
+      style={{ color: colors.grey[100] }}
+      onClick={() => setSelected(title)}
+      icon={icon}
+    >
+      <Typography>{title}</Typography>
+      <Link to={to} />
+    </MenuItem>
+  ) : null;
+};
+
+// Main Sidebar component
+const Sidebar = ({ user }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [selected, setSelected] = useState('');
+
+  // Function to check if a menu item should be visible based on the user's role
+  const checkRole = (roles) => {
+    return user && roles.includes(user.role_name);
+  };
+
+  return (
+    <Box
+      sx={{
+        '& .pro-sidebar-inner': {
+          background: `${colors.primary[400]} !important`,
+        },
+        '& .pro-icon-wrapper': {
+          backgroundColor: 'transparent !important',
+        },
+        '& .pro-inner-item': {
+          padding: '5px 35px 5px 20px !important',
+        },
+        '& .pro-inner-item:hover': {
+          color: '#868dfb !important',
+        },
+        '& .pro-menu-item.active': {
+          color: '#6870fa !important',
+        },
+      }}
+    >
+      <ProSidebar collapsed={isCollapsed}>
+        <Menu iconShape="square">
+          <MenuItem
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            icon={<MenuOutlinedIcon />}
+            style={{ margin: '10px 0 20px 0', color: colors.grey[100] }}
+          >
+            {!isCollapsed && (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                ml="15px"
+              >
+                <Typography variant="h5" color={colors.grey[100]}>
+                  Menu
+                </Typography>
+                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                  <MenuOutlinedIcon />
+                </IconButton>
+              </Box>
+            )}
+          </MenuItem>
+
+          {/* Dynamically render menu items based on the user's role */}
+          <Box paddingLeft={isCollapsed ? undefined : '10%'}>
+            <Item
+              title="My Task List"
+              to="/mytasklist"
+              icon={<ListAltOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            <Item
+              title="Task Progress"
+              to="/taskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            <Item
+              title="Previous Submissions"
+              to="/previoussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            <Item
+              title="Manage Staff"
+              to="/staff"
+              icon={<PeopleIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            {/* Admin specific items */}
+            <Item
+              title="ADMIN Manage Tasks"
+              to="/managetasks"
+              icon={<FactCheckOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            <Item
+              title="ADMIN Manage Staff"
+              to="/managestaff"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            <Item
+              title="ADMIN Task Progress"
+              to="/admintaskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            {/* Staff specific items */}
+            <Item
+              title="STAFF My Task List"
+              to="/staffmytasklist"
+              icon={<ListAltOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Staff'])}
+            />
+            <Item
+              title="STAFF Previous Submissions"
+              to="/staffprevioussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Staff'])}
+            />
+            <Item
+              title="Login"
+              to="/login"
+              icon={<LoginIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={!user} // Show only if the user is not logged in
+            />
+          </Box>
+        </Menu>
+      </ProSidebar>
+    </Box>
+  );
+};
+
+export default Sidebar;
