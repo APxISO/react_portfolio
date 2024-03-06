@@ -1,4 +1,313 @@
-sidebar.js
+--client/src/app.js--
+
+import React, { useState, useEffect } from 'react'; 
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ColorModeContext, useMode } from "./theme";
+import Topbar from "./scenes/global/Topbar"
+import Header from "./scenes/global/Header";
+import Sidebar from "./scenes/global/Sidebar"
+import { Route, Routes  } from "react-router-dom";
+import MyTaskList from "./scenes/director/myTaskList/MyTaskList";
+import TaskProgress from "./scenes/director/taskProgress/TaskProgress";
+import PreviousSubmissions from "./scenes/director/previousSubmissions/PreviousSubmissions"
+import Staff from "./scenes/director/staff/Staff";
+import SingleSurvey from "./components/SingleSurvey";
+import ManageTasks from "./scenes/admin/manageTasks/ManageTasks";
+import ManageStaff from "./scenes/admin/managaeStaff/ManageStaff";
+import AdminTaskProgress from "./scenes/admin/adminTaskProgress/AdminTaskProgress";
+import StaffMyTaskList from "./scenes/staff/staffMyTaskList/MyTaskList";
+import StaffPreviousSubmissions from "./scenes/staff/staffPreviousSubmissions/StaffPreviousSubmissions";
+import Login from "./scenes/login/Login";
+import Dashboard from "./scenes/Dashboard";
+
+
+function App() {
+  const [theme, colorMode] = useMode()
+  const [user, setUser] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem("token") || "");
+    
+
+
+
+    const handleUserLogin = (userData, userToken) => {
+      setUser(userData);
+      setToken(userToken);
+      localStorage.setItem('token', userToken);
+    };
+
+    const fetchUser = async () => {
+      const lsToken = localStorage.getItem("token");
+  
+      if (!lsToken) {
+        console.log("No token found, user is not logged in.");
+        return; // Exit the function if there's no token
+      }
+
+      setToken(lsToken);
+
+      try {
+        const response = await fetch(`/api/users/me`, {
+          headers: {
+            Authorization: `Bearer ${lsToken}`,
+          },
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (!data.error) {
+          setUser(data);
+        } else {
+          console.error(data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+
+    useEffect(() => {
+      fetchUser();
+    }, [token]);
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline/>
+    <div className="app">
+      <Sidebar user={user} setUser={setUser} setToken={setToken} token={token}/>
+      <main className="content">
+        {/* <Header/> */}
+        <Topbar/> 
+        <Routes>
+        <Route path="/" element={<Dashboard/>}/>
+
+        <Route path="/mytasklist" element={<MyTaskList />} />
+        <Route path="/taskProgress" element={<TaskProgress />} />
+        <Route path="/previousSubmissions" element={<PreviousSubmissions />} />
+        <Route path="/staff" element={<Staff />} />
+        <Route path="/singleSurvey" element={<SingleSurvey />} />
+        <Route path="/manageTasks" element={<ManageTasks />} />
+        <Route path="/manageStaff" element={<ManageStaff />} />
+        <Route path="/adminTaskProgress" element={<AdminTaskProgress />} />
+        <Route path="/staffMyTaskList" element={<StaffMyTaskList />} />
+        <Route path="/staffPreviousSubmissions" element={<StaffPreviousSubmissions />} />
+        <Route path="/login" element={<Login handleUserLogin={handleUserLogin} />} />
+        </Routes> 
+      </main>
+    </div>
+    </ThemeProvider>
+    </ColorModeContext.Provider>
+  );
+}
+
+export default App;
+
+
+--api/userRouter.js--
+
+const express = require("express");
+const userRouter = express.Router();
+const jwt = require("jsonwebtoken");
+
+const {
+  createUser,
+  getUser,
+  getUserById,
+  getUserByEmail,
+  getAllUsers,
+  updateUserById,
+  deleteUserById
+} = require("../server/users");
+
+
+
+userRouter.use((req, res, next) => {
+  console.log("A request is being made to /users...");
+  next();
+});
+
+
+// TOKEN VERIFICATION FOR USERS
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; //Bearer TOKEN
+
+
+  if (!token || token == null) {
+    console.log("No token provided");
+    return res.sendStatus(401);
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      console.log("Token verification error:", err.message);
+      return res.sendStatus(403);
+    }
+    req.user = user;
+    console.log("Token verified, user ID:", user.id);
+    next();
+  });
+}
+
+
+// TESTED AND WORKS
+userRouter.post("/register", async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+
+    if (password.length < 8) {
+      return res.status(400).send("Password too short, must be at least 8 characters");
+    }
+
+    const user = await createUser(req.body);
+    
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1w' });
+    
+    res.status(201).send({ user: {id: user.id, username: user.username, email: user.email, role: user.role_name }, token });
+    console.log('New user successfully created!', {id: user.id, user: { username: user.username, email: user.email, role: user.role_name }}  )
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+//TESTED AND WORKS
+userRouter.post("/login", async (req, res, next) => {
+  try {
+    const {email, password} = req.body;
+    const user = await getUser({email, password});
+    if (!user) {
+      return res.status(401).send({ message: "Incorrect email or password" });
+    }
+
+    const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1w' });
+    console.log(`User ${user.email} credentials match, login successful!`);
+    res.send({ user: { email: user.email, id: user.user_id }, token });
+    
+  } catch (error) {
+    console.log(error.message)
+    res.status(500).send({error: "Server error occurred"})
+  }
+});
+
+
+
+// TESTED AND WORKS
+userRouter.get("/me", authenticateToken, async (req, res, next) => {
+  if (!req.user || !req.user.id) {
+    console.log("req.user or req.user.id is undefined");
+    return res.status(401).send({ error: "Invalid token or user not found" });
+  }
+  try {
+    console.log("Fetching user details for ID:", req.user.id);
+    const userDetails = await getUserById(req.user.id);
+    if (!userDetails) {
+      console.log("User not found for ID:", req.user.id);
+      return res.status(404).send({ error: "User not found" });
+    }
+    delete userDetails.password
+    console.log("User details found:", userDetails);
+    res.send(userDetails);
+  } catch (error) {
+    console.error("Error in /me route:", error);
+    res.status(500).send({message: "Server error occured"})
+    next(error);
+  }
+});
+
+
+// TESTED AND WORKS
+userRouter.get("/email", async (req, res, next) => {
+  const email = req.query.email;
+  if (!email) {
+    return req.status(400).send({message: 'Email parameter is required'})
+  }
+  try {
+    const user = await getUserByEmail(email);
+    if (!user) {
+        return res.status(404).send({message: 'User not found'})
+    }
+    res.json(user)
+  } catch (error) {
+    console.error('Error fetching user by email: ', error)
+    res.status(500).send('Sever error')
+  }
+});
+
+
+// TESTED AND WORKS
+userRouter.patch("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params; // Extract userId from the URL parameters
+    const updateData = req.body; // Extract the data to be updated from the request body
+
+    // Call the updateUserById function with userId and updateData
+    const updatedUser = await updateUserById(userId, updateData);
+
+    if (!updatedUser) {
+      return res.status(404).send({ error: "User not found or no update was made" });
+    }
+
+    
+    res.send(updatedUser);
+    
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+// TESTED AND WORKS
+userRouter.delete("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params; // Extract userId from the URL parameters
+
+    // Call the deleteUserById function with userId
+    const deletedUser = await deleteUserById(userId);
+
+    if (!deletedUser) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    res.status(200).send({ message: "User successfully deleted", deletedUser });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+// TESTED AND WORKS
+userRouter.get('/:userId', async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await getUserById(userId);
+      if (user) {
+        res.json(user);
+      } else {
+        res.status(404).send('User not found');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Server error');
+    }
+  });
+  
+
+// TESTED AND WORKS
+userRouter.get("/", async (req, res, next) => {
+    try {
+      const users = await getAllUsers();
+      res.send(users);
+    } catch (error) {
+      next(error);
+    }
+  });
+
+module.exports = userRouter;
+
+
+--client/scr/global/Sidebar.jsx--
 
 import { useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
@@ -204,395 +513,7 @@ const Sidebar = () => {
 export default Sidebar;
 
 
-updated sidebar:
-
-import React from 'react';
-import { Box, Typography, IconButton, Menu, MenuItem } from '@mui/material';
-import ProSidebar, { Menu, MenuItem } from 'react-pro-sidebar';
-import 'react-pro-sidebar/dist/css/styles.css';
-import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
-import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import PeopleIcon from '@mui/icons-material/People';
-import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
-import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
-import LoginIcon from '@mui/icons-material/Login';
-// Other imports
-
-const Sidebar = ({ user, isCollapsed, setIsCollapsed, selected, setSelected }) => {
-  const isLoggedIn = user && user.token;
-
-  // Define an array for each role with its accessible menu items
-  const adminItems = [
-    { title: 'ADMIN Manage Tasks', to: '/managetasks', icon: <FactCheckOutlinedIcon /> },
-    { title: 'ADMIN Manage Staff', to: '/managestaff', icon: <ContactsOutlinedIcon /> },
-    { title: 'ADMIN Task Progress', to: '/admintaskprogress', icon: <LeaderboardOutlinedIcon /> },
-  ];
-
-  const staffItems = [
-    { title: 'STAFF My Task List', to: '/staffmytasklist', icon: <ListAltOutlinedIcon /> },
-    { title: 'STAFF Previous Submissions', to: '/staffprevioussubmissions', icon: <AccessTimeOutlinedIcon /> },
-  ];
-
-  const dirItems = [
-    { title: 'My Task List', to: '/mytasklist', icon: <ListAltOutlinedIcon /> },
-    { title: 'Task Progress', to: '/taskprogress', icon: <LeaderboardOutlinedIcon /> },
-    { title: 'Previous Submissions', to: '/previoussubmissions', icon: <AccessTimeOutlinedIcon /> },
-    { title: 'Manage Staff', to: '/staff', icon: <PeopleIcon /> },
-  ];
-
-  const loginItem = { title: 'Login', to: '/login', icon: <LoginIcon /> };
-
-  // Determine which items to display based on user role
-  let itemsToDisplay = [];
-  if (isLoggedIn) {
-    switch (user.role_name) {
-      case 'Admin':
-        itemsToDisplay = adminItems;
-        break;
-      case 'Staff':
-        itemsToDisplay = staffItems;
-        break;
-      case 'Dir':
-        itemsToDisplay = [...dirItems, ...staffItems]; // Assuming Dir has access to Staff items too
-        break;
-      default:
-        // Role not recognized or user is not logged in
-        itemsToDisplay = [loginItem];
-    }
-  } else {
-    itemsToDisplay = [loginItem];
-  }
-
-  return (
-    <Box>
-      <ProSidebar collapsed={isCollapsed}>
-        <Menu iconShape="square">
-          {/* Render items based on role */}
-          {itemsToDisplay.map((item, index) => (
-            <MenuItem key={index} icon={item.icon} onClick={() => setSelected(item.to)}>
-              {item.title}
-            </MenuItem>
-          ))}
-        </Menu>
-      </ProSidebar>
-    </Box>
-  );
-};
-
-export default Sidebar;
-
-
-
-client/app.js
-
-import React, { useState, useEffect } from 'react'; 
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { ColorModeContext, useMode } from "./theme";
-import Topbar from "./scenes/global/Topbar"
-import Header from "./scenes/global/Header";
-import Sidebar from "./scenes/global/Sidebar"
-import { Route, Routes  } from "react-router-dom";
-import MyTaskList from "./scenes/director/myTaskList/MyTaskList";
-import TaskProgress from "./scenes/director/taskProgress/TaskProgress";
-import PreviousSubmissions from "./scenes/director/previousSubmissions/PreviousSubmissions"
-import Staff from "./scenes/director/staff/Staff";
-import SingleSurvey from "./components/SingleSurvey";
-import ManageTasks from "./scenes/admin/manageTasks/ManageTasks";
-import ManageStaff from "./scenes/admin/managaeStaff/ManageStaff";
-import AdminTaskProgress from "./scenes/admin/adminTaskProgress/AdminTaskProgress";
-import StaffMyTaskList from "./scenes/staff/staffMyTaskList/MyTaskList";
-import StaffPreviousSubmissions from "./scenes/staff/staffPreviousSubmissions/StaffPreviousSubmissions";
-import Login from "./scenes/login/Login";
-import Dashboard from "./scenes/Dashboard";
-
-
-function App() {
-  const [theme, colorMode] = useMode()
-  const [user, setUser] = useState(null);
-    const [token, setToken] = useState(localStorage.getItem("token") || "");
-    
-
-
-
-    const handleUserLogin = (userData, userToken) => {
-      setUser(userData);
-      setToken(userToken);
-      localStorage.setItem('token', userToken);
-    };
-
-    const fetchUser = async () => {
-      const lsToken = localStorage.getItem("token");
-  
-      if (!lsToken) {
-        console.log("No token found, user is not logged in.");
-        return; // Exit the function if there's no token
-      }
-
-      setToken(lsToken);
-
-      try {
-        const response = await fetch(`/api/users/me`, {
-          headers: {
-            Authorization: `Bearer ${lsToken}`,
-          },
-        });
-
-        const data = await response.json();
-        console.log(data);
-
-        if (!data.error) {
-          setUser(data);
-        } else {
-          console.error(data.error);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-
-    useEffect(() => {
-      fetchUser();
-    }, [token]);
-
-  return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-    <div className="app">
-      <Sidebar user={user} setUser={setUser} setToken={setToken} token={token}/>
-      <main className="content">
-        {/* <Header/> */}
-        <Topbar/> 
-        <Routes>
-        <Route path="/" element={<Dashboard/>}/>
-
-        <Route path="/mytasklist" element={<MyTaskList />} />
-        <Route path="/taskProgress" element={<TaskProgress />} />
-        <Route path="/previousSubmissions" element={<PreviousSubmissions />} />
-        <Route path="/staff" element={<Staff />} />
-        <Route path="/singleSurvey" element={<SingleSurvey />} />
-        <Route path="/manageTasks" element={<ManageTasks />} />
-        <Route path="/manageStaff" element={<ManageStaff />} />
-        <Route path="/adminTaskProgress" element={<AdminTaskProgress />} />
-        <Route path="/staffMyTaskList" element={<StaffMyTaskList />} />
-        <Route path="/staffPreviousSubmissions" element={<StaffPreviousSubmissions />} />
-        <Route path="/login" element={<Login handleUserLogin={handleUserLogin} />} />
-        </Routes> 
-      </main>
-    </div>
-    </ThemeProvider>
-    </ColorModeContext.Provider>
-  );
-}
-
-export default App;
-
-
-api/userrouter.js
-
-const express = require("express");
-const userRouter = express.Router();
-const jwt = require("jsonwebtoken");
-
-const {
-  createUser,
-  getUser,
-  getUserById,
-  getUserByEmail,
-  getAllUsers,
-  updateUserById,
-  deleteUserById
-} = require("../server/users");
-
-
-
-userRouter.use((req, res, next) => {
-  console.log("A request is being made to /users...");
-  next();
-});
-
-
-// TOKEN VERIFICATION FOR USERS
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; //Bearer TOKEN
-
-
-  if (!token || token == null) {
-    console.log("No token provided");
-    return res.sendStatus(401);
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      console.log("Token verification error:", err.message);
-      return res.sendStatus(403);
-    }
-    req.user = user;
-    console.log("Token verified, user ID:", user.id);
-    next();
-  });
-}
-
-
-// TESTED AND WORKS
-userRouter.post("/register", async (req, res, next) => {
-  try {
-    const { username, password } = req.body;
-
-    if (password.length < 8) {
-      return res.status(400).send("Password too short, must be at least 8 characters");
-    }
-
-    const user = await createUser(req.body);
-    
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1w' });
-    
-    res.status(201).send({ user: {id: user.id, username: user.username, email: user.email, role: user.role_name }, token });
-    console.log('New user successfully created!', {id: user.id, user: { username: user.username, email: user.email, role: user.role_name }}  )
-  } catch (error) {
-    next(error);
-  }
-});
-
-
-//TESTED AND WORKS
-userRouter.post("/login", async (req, res, next) => {
-  try {
-    const {email, password} = req.body;
-    const user = await getUser({email, password});
-    if (!user) {
-      return res.status(401).send({ message: "Incorrect email or password" });
-    }
-
-    const token = jwt.sign({ id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '1w' });
-    console.log(`User ${user.email} credentials match, login successful!`);
-    res.send({ user: { email: user.email, id: user.user_id }, token });
-    
-  } catch (error) {
-    console.log(error.message)
-    res.status(500).send({error: "Server error occurred"})
-  }
-});
-
-
-
-// TESTED AND WORKS
-userRouter.get("/me", authenticateToken, async (req, res, next) => {
-  if (!req.user || !req.user.id) {
-    console.log("req.user or req.user.id is undefined");
-    return res.status(401).send({ error: "Invalid token or user not found" });
-  }
-  try {
-    console.log("Fetching user details for ID:", req.user.id);
-    const userDetails = await getUserById(req.user.id);
-    if (!userDetails) {
-      console.log("User not found for ID:", req.user.id);
-      return res.status(404).send({ error: "User not found" });
-    }
-    delete userDetails.password
-    console.log("User details found:", userDetails);
-    res.send(userDetails);
-  } catch (error) {
-    console.error("Error in /me route:", error);
-    res.status(500).send({message: "Server error occured"})
-    next(error);
-  }
-});
-
-
-// TESTED AND WORKS
-userRouter.get("/email", async (req, res, next) => {
-  const email = req.query.email;
-  if (!email) {
-    return req.status(400).send({message: 'Email parameter is required'})
-  }
-  try {
-    const user = await getUserByEmail(email);
-    if (!user) {
-        return res.status(404).send({message: 'User not found'})
-    }
-    res.json(user)
-  } catch (error) {
-    console.error('Error fetching user by email: ', error)
-    res.status(500).send('Sever error')
-  }
-});
-
-
-// TESTED AND WORKS
-userRouter.patch("/:userId", async (req, res, next) => {
-  try {
-    const { userId } = req.params; // Extract userId from the URL parameters
-    const updateData = req.body; // Extract the data to be updated from the request body
-
-    // Call the updateUserById function with userId and updateData
-    const updatedUser = await updateUserById(userId, updateData);
-
-    if (!updatedUser) {
-      return res.status(404).send({ error: "User not found or no update was made" });
-    }
-
-    
-    res.send(updatedUser);
-    
-  } catch (error) {
-    next(error);
-  }
-});
-
-
-// TESTED AND WORKS
-userRouter.delete("/:userId", async (req, res, next) => {
-  try {
-    const { userId } = req.params; // Extract userId from the URL parameters
-
-    // Call the deleteUserById function with userId
-    const deletedUser = await deleteUserById(userId);
-
-    if (!deletedUser) {
-      return res.status(404).send({ error: "User not found" });
-    }
-
-    res.status(200).send({ message: "User successfully deleted", deletedUser });
-  } catch (error) {
-    next(error);
-  }
-});
-
-
-// TESTED AND WORKS
-userRouter.get('/:userId', async (req, res) => {
-    try {
-      const { userId } = req.params;
-      const user = await getUserById(userId);
-      if (user) {
-        res.json(user);
-      } else {
-        res.status(404).send('User not found');
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Server error');
-    }
-  });
-  
-
-// TESTED AND WORKS
-userRouter.get("/", async (req, res, next) => {
-    try {
-      const users = await getAllUsers();
-      res.send(users);
-    } catch (error) {
-      next(error);
-    }
-  });
-
-module.exports = userRouter;
-
-db/users.js
+--server/db/users.js--
 
 const bcrypt = require("bcrypt");
 const pool = require("./db");
@@ -756,3 +677,5 @@ module.exports = {
   updateUserById,
   deleteUserById
 };
+
+
