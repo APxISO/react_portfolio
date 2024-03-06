@@ -1,0 +1,157 @@
+eturn (
+    <Box
+      sx={{
+        "& .pro-sidebar-inner": {
+          background: `${colors.primary[400]} !important`,
+        },
+        "& .pro-icon-wrapper": {
+          backgroundColor: "transparent !important",
+        },
+        "& .pro-inner-item": {
+          padding: "5px 35px 5px 20px !important",
+        },
+        "& .pro-inner-item:hover": {
+          color: "#868dfb !important",
+        },
+        "& .pro-menu-item.active": {
+          color: "#6870fa !important",
+        },
+      }}
+    >
+      <ProSidebar collapsed={isCollapsed}>
+        <Menu iconShape="square">
+          {/* LOGO AND MENU ICON */}
+          <MenuItem
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
+            style={{
+              margin: "10px 0 20px 0",
+              color: colors.grey[100],
+            }}
+          >
+            {!isCollapsed && (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                ml="15px"
+              >
+                <Typography variant="h3" color={colors.grey[100]}>
+                Tourn. Dir.
+                </Typography>
+                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                  <MenuOutlinedIcon />
+                </IconButton>
+              </Box>
+            )}
+          </MenuItem>
+
+          {!isCollapsed && (
+            <Box mb="25px">
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <img
+                  alt="profile-user"
+                  width="100px"
+                  height="100px"
+                  src={`../../assets/user.png`}
+                  style={{ cursor: "pointer", borderRadius: "50%" }}
+                />
+              </Box>
+              <Box textAlign="center">
+                <Typography
+                  variant="h2"
+                  color={colors.grey[100]}
+                  fontWeight="bold"
+                  sx={{ m: "10px 0 0 0" }}
+                >
+                  USER NAME
+                </Typography>
+                <Typography variant="h5" color={colors.greenAccent[500]}>
+                  USER TITLE
+                </Typography>
+              </Box>
+            </Box>
+          )}
+
+          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+            
+            <Item
+              title="My Task List"
+              to="/mytasklist"
+              icon={<ListAltOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />  
+
+            <Item
+              title="Task Progress"
+              to="/taskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />  
+
+            <Item
+              title="Previous Submissions"
+              to="/previoussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />  
+            <Item
+              title=" Manage Staff"
+              to="/staff"
+              icon={<PeopleIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="ADMIN Manage Tasks"
+              to="/managetasks"
+              icon={<FactCheckOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="ADMIN Manage Staff"
+              to="/managestaff"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="ADMIN Task Progress"
+              to="/admintaskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="STAFF My Task List"
+              to="/staffmytasklist"
+              icon={<ListAltOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="STAFF Previous Submissions"
+              to="/staffprevioussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Login"
+              to="/login"
+              icon={<LoginIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          </Box>
+        </Menu>
+      </ProSidebar>
+    </Box>
+  );
+};
+
+export default Sidebar;
