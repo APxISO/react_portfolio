@@ -159,6 +159,86 @@ return (
 export default Sidebar;
 
 
+updated sidebar:
+
+import React from 'react';
+import { Box, Typography, IconButton, Menu, MenuItem } from '@mui/material';
+import ProSidebar, { Menu, MenuItem } from 'react-pro-sidebar';
+import 'react-pro-sidebar/dist/css/styles.css';
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import PeopleIcon from '@mui/icons-material/People';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
+import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
+import LoginIcon from '@mui/icons-material/Login';
+// Other imports
+
+const Sidebar = ({ user, isCollapsed, setIsCollapsed, selected, setSelected }) => {
+  const isLoggedIn = user && user.token;
+
+  // Define an array for each role with its accessible menu items
+  const adminItems = [
+    { title: 'ADMIN Manage Tasks', to: '/managetasks', icon: <FactCheckOutlinedIcon /> },
+    { title: 'ADMIN Manage Staff', to: '/managestaff', icon: <ContactsOutlinedIcon /> },
+    { title: 'ADMIN Task Progress', to: '/admintaskprogress', icon: <LeaderboardOutlinedIcon /> },
+  ];
+
+  const staffItems = [
+    { title: 'STAFF My Task List', to: '/staffmytasklist', icon: <ListAltOutlinedIcon /> },
+    { title: 'STAFF Previous Submissions', to: '/staffprevioussubmissions', icon: <AccessTimeOutlinedIcon /> },
+  ];
+
+  const dirItems = [
+    { title: 'My Task List', to: '/mytasklist', icon: <ListAltOutlinedIcon /> },
+    { title: 'Task Progress', to: '/taskprogress', icon: <LeaderboardOutlinedIcon /> },
+    { title: 'Previous Submissions', to: '/previoussubmissions', icon: <AccessTimeOutlinedIcon /> },
+    { title: 'Manage Staff', to: '/staff', icon: <PeopleIcon /> },
+  ];
+
+  const loginItem = { title: 'Login', to: '/login', icon: <LoginIcon /> };
+
+  // Determine which items to display based on user role
+  let itemsToDisplay = [];
+  if (isLoggedIn) {
+    switch (user.role_name) {
+      case 'Admin':
+        itemsToDisplay = adminItems;
+        break;
+      case 'Staff':
+        itemsToDisplay = staffItems;
+        break;
+      case 'Dir':
+        itemsToDisplay = [...dirItems, ...staffItems]; // Assuming Dir has access to Staff items too
+        break;
+      default:
+        // Role not recognized or user is not logged in
+        itemsToDisplay = [loginItem];
+    }
+  } else {
+    itemsToDisplay = [loginItem];
+  }
+
+  return (
+    <Box>
+      <ProSidebar collapsed={isCollapsed}>
+        <Menu iconShape="square">
+          {/* Render items based on role */}
+          {itemsToDisplay.map((item, index) => (
+            <MenuItem key={index} icon={item.icon} onClick={() => setSelected(item.to)}>
+              {item.title}
+            </MenuItem>
+          ))}
+        </Menu>
+      </ProSidebar>
+    </Box>
+  );
+};
+
+export default Sidebar;
+
+
+
 client/app.js
 
 import React, { useState, useEffect } from 'react'; 
