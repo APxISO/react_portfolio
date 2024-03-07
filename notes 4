@@ -212,3 +212,63 @@ export const useMode = () => {
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   return [theme, colorMode];
 };
+
+
+
+updated code:
+
+export const tokens = (mode) => ({
+  ...(mode === "dark" 
+    ? {
+        // For dark mode, we choose darker shades or more saturated versions
+        primary: { main: '#04346b'}, // Catalina Blue
+        secondary: { main: '#e2050d'}, // Monza
+        background: { main: '#102d44'}, // Elephant, for a darker background
+        accent: { // Additional brand colors for accents
+          hoki: '#61809c',
+          shipCove: '#7394bc',
+          bismark: '#456281',
+          azure: '#316294',
+        },
+      } 
+    : {
+        // For light mode, we keep it lighter or less saturated
+        primary: { main: '#04346b'}, // Catalina Blue
+        secondary: { main: '#e2050d'}, // Monza
+        background: { main: '#edeff3'}, // Athens Gray, for a lighter background
+        accent: { // Additional brand colors for accents
+          hoki: '#61809c',
+          shipCove: '#7394bc',
+          bismark: '#456281',
+          azure: '#316294',
+        },
+      }
+  ),
+});
+
+
+
+
+export const themeSettings = (mode) => {
+  const colors = tokens(mode);
+  return {
+    palette: {
+      mode,
+      primary: {
+        main: colors.primary.main,
+      },
+      secondary: {
+        main: colors.secondary.main,
+      },
+      error: {
+        main: colors.secondary.main, // Utilizing Monza as the error color as well
+      },
+      background: {
+        default: colors.background.main,
+      },
+      // Define additional color usage as needed
+    },
+    typography: { /* No changes here, assuming your typography settings are aligned with your brand */ },
+  };
+};
+
