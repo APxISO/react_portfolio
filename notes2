@@ -55,7 +55,6 @@ export default Login;
 
 updated***
 // --client/src/global/Sidebar.jsx--
-
 // --client/src/global/Sidebar.jsx--
 
 import React, { useState } from 'react';
@@ -72,7 +71,6 @@ import PeopleIcon from '@mui/icons-material/People';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
 import LoginIcon from '@mui/icons-material/Login';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Import the logout icon
 
 // Define the Item component for rendering each menu item
 const Item = ({ title, to, icon, selected, setSelected, isVisible }) => {
@@ -92,7 +90,7 @@ const Item = ({ title, to, icon, selected, setSelected, isVisible }) => {
 };
 
 // Main Sidebar component
-const Sidebar = ({ user, handleLogout }) => {
+const Sidebar = ({ user }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -149,25 +147,89 @@ const Sidebar = ({ user, handleLogout }) => {
 
           {/* Dynamically render menu items based on the user's role */}
           <Box paddingLeft={isCollapsed ? undefined : '10%'}>
-            {/* Place your conditional Items here */}
-            {/* Example for an Item:
             <Item
-              title="Some Page"
-              to="/somepage"
-              icon={<SomeIcon />}
+              title="My Task List"
+              to="/mytasklist"
+              icon={<ListAltOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-              isVisible={checkRole(['Admin', 'Dir'])}
+              isVisible={checkRole(['Dir'])}
             />
-            */}
+            <Item
+              title="Task Progress"
+              to="/taskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            <Item
+              title="Previous Submissions"
+              to="/previoussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            <Item
+              title="Manage Staff"
+              to="/staff"
+              icon={<PeopleIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            {/* Admin specific items */}
+            <Item
+              title="ADMIN Manage Tasks"
+              to="/managetasks"
+              icon={<FactCheckOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            <Item
+              title="ADMIN Manage Staff"
+              to="/managestaff"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            <Item
+              title="ADMIN Task Progress"
+              to="/admintaskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            {/* Staff specific items */}
+            <Item
+              title="STAFF My Task List"
+              to="/staffmytasklist"
+              icon={<ListAltOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Staff'])}
+            />
+            <Item
+              title="STAFF Previous Submissions"
+              to="/staffprevioussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Staff'])}
+            />
+            <Item
+              title="Login"
+              to="/login"
+              icon={<LoginIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={!user} // Show only if the user is not logged in
+            />
           </Box>
-          
-          {/* Logout Menu Item */}
-          {user && (
-            <MenuItem icon={<ExitToAppIcon />} onClick={handleLogout}>
-              Log Out
-            </MenuItem>
-          )}
         </Menu>
       </ProSidebar>
     </Box>
