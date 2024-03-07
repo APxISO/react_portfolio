@@ -1,7 +1,6 @@
 current try 330pm:
 import React, { useEffect, useState } from 'react';
-import { Box, useTheme, IconButton, Button } from "@mui/material";
-import InputBase from "@mui/material/InputBase";
+import { Box, useTheme, IconButton, Button, InputBase, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
 import Header from "../../../components/Header";
@@ -11,6 +10,7 @@ const Staff = ({ user }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [users, setUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Guard clause to check if user or user.parent_tourn is undefined
@@ -24,15 +24,16 @@ const Staff = ({ user }) => {
         const response = await fetch('http://localhost:3001/api/users');
         const data = await response.json();
         if (data) {
-          // Use optional chaining to safely access user.parent_tourn
-          const staffUnderDirector = data.filter(u => u.parent_tourn === user?.parent_tourn).map(user => ({
-            ...user,
-            id:user.user_id,
-            name: user.username,
-            email: user.email,
-            tournament: user.parent_tourn,
-            role: user.role_name
-          }));
+          const staffUnderDirector = data
+            .filter(u => u.parent_tourn === user?.parent_tourn)
+            .map(user => ({
+              ...user,
+              id: user.user_id,
+              name: user.username,
+              email: user.email,
+              tournament: user.parent_tourn,
+              role: user.role_name
+            }));
           setUsers(staffUnderDirector);
         }
       } catch (error) {
@@ -41,113 +42,67 @@ const Staff = ({ user }) => {
     };
     
     fetchUsers();
-  }, [user?.parent_tourn]); // Use optional chaining in dependency array as well
+  }, [user?.parent_tourn]);
 
-  const columns = [
-    { field: "id", headerName: "ID" },
-    {
-      field: "name",
-      headerName: "NAME",
-      flex: 1,
-      cellClassName: "name-column--cell",
-    },
-    {
-      field: "email",
-      headerName: "EMAIL",
-      flex: 1,
-    },
-    {
-      field: "role",
-      headerName: "ROLE",
-      flex: 1,
-    },
-    {
-      field: "tournament",
-      headerName: "TOURNAMENT",
-      flex: 1,
-      type: "string",
-    },
-    { 
-      field: "actions", 
-      headerName: "ACTIONS", 
-      flex: 1, 
-      renderCell: (params) => { 
-          return ( 
-              <div> 
-                  <Button 
-                      variant="contained" 
-                      color="secondary" 
-                      onClick={() => {/* Implement Assign Action */}} > 
-                      Assign Task
-                  </Button> 
-              </div> 
-          ); 
-      }, 
-    },
-  ];
+  // Filter users based on search query
+  const filteredUsers = users.filter(user => 
+    user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.role.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Box m="20px">
       <Header title="STAFF"/>
 
-     {/* SEARCH BAR */}
-     <Box
+      {/* SEARCH BAR */}
+      <Box
         display="flex"
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
         justifyContent="left"
-        width="13%"
+        width="100%" // Adjusted to full width for better UI
+        mb={2} // Add some margin at the bottom
         boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+        <InputBase
+          sx={{ ml: 2, flex: 1 }}
+          placeholder="Search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <IconButton type="button" sx={{ p: 1 }}>
           <SearchIcon />
         </IconButton>
       </Box>
       
-        {/* MAIN GRID */}
-
+      {/* MAIN GRID */}
       <Box
-        m="40px 0 0 0"
         height="65vh"
         boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
         sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
-          },
-          "& .MuiCheckbox-root": {
-            color: `${colors.greenAccent[200]} !important`,
-          },
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none" },
+          "& .name-column--cell": { color: colors.greenAccent[300] },
+          "& .MuiDataGrid-columnHeaders": { backgroundColor: colors.blueAccent[700], borderBottom: "none" },
+          "& .MuiDataGrid-virtualScroller": { backgroundColor: colors.primary[400] },
+          "& .MuiDataGrid-footerContainer": { borderTop: "none", backgroundColor: colors.blueAccent[700] },
+          "& .MuiCheckbox-root": { color: `${colors.greenAccent[200]} !important` },
         }}
       >
-        <DataGrid checkboxSelection rows={users} columns={columns} /> 
+        {filteredUsers.length > 0 ? (
+          <DataGrid checkboxSelection rows={filteredUsers} columns={columns} />
+        ) : (
+          <Typography textAlign="center" color={colors.primary[300]} marginTop="20px">
+            No Results
+          </Typography>
+        )}
       </Box>
     </Box>
   );
 };
 
 export default Staff;
-
-
-
-
 ********************************************************
 import { Box, Typography, useTheme, IconButton } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
