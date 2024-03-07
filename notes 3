@@ -147,3 +147,179 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
+*current sidebar*
+
+import React from 'react';
+import { Box, Typography, useTheme } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { ProSidebar, Menu, MenuItem } from 'react-pro-sidebar';
+import 'react-pro-sidebar/dist/css/styles.css';
+import { tokens } from '../../theme';
+import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
+import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import PeopleIcon from '@mui/icons-material/People';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
+import ContactsOutlinedIcon from '@mui/icons-material/ContactsOutlined';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Icon for logout
+import LoginIcon from '@mui/icons-material/Login';
+
+// Define the Item component for rendering each menu item
+const Item = ({ title, to, icon, selected, setSelected, isVisible, onClick }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  return isVisible ? (
+    <MenuItem
+      active={selected === title}
+      style={{ color: colors.grey[100] }}
+      onClick={() => {
+        setSelected(title);
+        if (onClick) onClick();
+      }}
+      icon={icon}
+    >
+      <Link to={to} style={{ color: colors.grey[100], textDecoration: 'none' }}>
+        <Typography>{title}</Typography>
+      </Link>
+    </MenuItem>
+  ) : null;
+};
+
+// Main Sidebar component
+const Sidebar = ({ user, handleUserLogout }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [selected, setSelected] = React.useState('');
+
+  // Function to check if a menu item should be visible based on the user's role
+  const checkRole = (roles) => {
+    return user && roles.includes(user.role_name);
+  };
+
+  return (
+    <Box
+      sx={{
+        '& .pro-sidebar-inner': {
+          background: `${colors.primary[400]} !important`,
+        },
+        '& .pro-icon-wrapper': {
+          backgroundColor: 'transparent !important',
+        },
+        '& .pro-inner-item': {
+          padding: '5px 35px 5px 20px !important',
+        },
+        '& .pro-inner-item:hover': {
+          color: '#868dfb !important',
+        },
+        '& .pro-menu-item.active': {
+          color: '#6870fa !important',
+        },
+      }}
+    >
+      <ProSidebar >
+        <Menu iconShape="square">
+          {/* Your conditional items based on the user's role here */}
+          <Item
+              title="Task Progress"
+              to="/taskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+          <Item
+            title="My Task List"
+            to="/mytasklist"
+            icon={<ListAltOutlinedIcon />}
+            selected={selected}
+            setSelected={setSelected}
+            isVisible={checkRole(['Dir'])}
+          />
+            <Item
+              title="Previous Submissions"
+              to="/previoussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            <Item
+              title="Manage Staff"
+              to="/staff"
+              icon={<PeopleIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Dir'])}
+            />
+            {/* Admin specific items */}
+            <Item
+              title="ADMIN Task Progress"
+              to="/admintaskprogress"
+              icon={<LeaderboardOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            <Item
+              title="ADMIN Manage Tasks"
+              to="/managetasks"
+              icon={<FactCheckOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            <Item
+              title="ADMIN Manage Staff"
+              to="/managestaff"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Admin'])}
+            />
+            
+            {/* Staff specific items */}
+            <Item
+              title="STAFF My Task List"
+              to="/staffmytasklist"
+              icon={<ListAltOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Staff'])}
+            />
+            <Item
+              title="STAFF Previous Submissions"
+              to="/staffprevioussubmissions"
+              icon={<AccessTimeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={checkRole(['Staff'])}
+            />
+            <Item
+              title="Login"
+              to="/login"
+              icon={<LoginIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={!user} // Show only if the user is not logged in
+            />
+          {/* Logout functionality for logged-in users */}
+          {user && (
+            <Item
+              title="Log Out"
+              to="/login" // Assuming you have a route to redirect to on logout
+              icon={<ExitToAppIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              isVisible={!!user}
+              onClick={handleUserLogout}
+            />
+          )}
+        </Menu>
+      </ProSidebar>
+    </Box>
+  );
+};
+
+export default Sidebar;
