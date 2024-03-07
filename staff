@@ -406,3 +406,132 @@ TypeError: Cannot read properties of null (reading 'parent_tourn')
     at recoverFromConcurrentError (http://localhost:3000/static/js/bundle.js:98768:24)
     at performSyncWorkOnRoot (http://localhost:3000/static/js/bundle.js:98977:24)
 
+
+
+app.js api call for fetch user payload via the terminal:
+
+A request is being made to /users...
+Token verified, user ID: 9
+Fetching user details for ID: 9
+User details found: {
+  user_id: 9,
+  username: 'Test User 2',
+  email: 'AnotherTest123@pgatour.com',
+  role_name: 'Dir',
+  isadmin: false,
+  parent_tourn: 1
+}
+
+
+app.js
+
+import React, { useState, useEffect } from 'react';
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ColorModeContext, useMode } from "./theme";
+import Topbar from "./scenes/global/Topbar";
+import Sidebar from "./scenes/global/Sidebar";
+import { Route, Routes, Navigate } from "react-router-dom";
+import MyTaskList from "./scenes/director/myTaskList/MyTaskList";
+import TaskProgress from "./scenes/director/taskProgress/TaskProgress";
+import PreviousSubmissions from "./scenes/director/previousSubmissions/PreviousSubmissions";
+import Staff from "./scenes/director/staff/Staff";
+import SingleSurvey from "./components/SingleSurvey";
+import ManageTasks from "./scenes/admin/manageTasks/ManageTasks";
+import ManageStaff from "./scenes/admin/managaeStaff/ManageStaff";
+import AdminTaskProgress from "./scenes/admin/adminTaskProgress/AdminTaskProgress";
+import StaffMyTaskList from "./scenes/staff/staffMyTaskList/MyTaskList";
+import StaffPreviousSubmissions from "./scenes/staff/staffPreviousSubmissions/StaffPreviousSubmissions";
+import Login from "./scenes/login/Login";
+import Dashboard from "./scenes/Dashboard";
+
+function App() {
+  const [theme, colorMode] = useMode();
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+
+  const handleUserLogout = () => {
+    setUser(null);
+    setToken('');
+    localStorage.removeItem("token");
+  };
+
+  const handleUserLogin = (userData, userToken) => {
+    setUser(userData);
+    setToken(userToken);
+    localStorage.setItem('token', userToken);
+  };
+
+  const fetchUser = async () => {
+    const lsToken = localStorage.getItem("token");
+
+    if (!lsToken) {
+      console.log("No token found, user is not logged in.");
+      return; // Exit the function if there's no token
+    }
+
+    setToken(lsToken);
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/users/me`, {
+        headers: {
+          Authorization: `Bearer ${lsToken}`,
+        },
+      });
+
+      const data = await response.json();
+      if (!data.error) {
+        setUser(data);
+      } else {
+        console.error(data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, [token]);
+
+  return (
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="app">
+          <Sidebar user={user} handleUserLogout={handleUserLogout} />
+          <main className="content">
+            <Topbar /> 
+            <Routes>
+              {token ? (
+                <>
+                  <Route path="/Dashboard" element={<Dashboard user={user} />} />
+                  <Route path="/mytasklist" element={<MyTaskList />} />
+                  <Route path="/taskProgress" element={<TaskProgress />} />
+                  <Route path="/previousSubmissions" element={<PreviousSubmissions />} />
+                  <Route path="/staff" element={<Staff user={user} />} />
+                  <Route path="/singleSurvey" element={<SingleSurvey />} />
+                  <Route path="/manageTasks" element={<ManageTasks />} />
+                  <Route path="/manageStaff" element={<ManageStaff />} />
+                  <Route path="/adminTaskProgress" element={<AdminTaskProgress />} />
+                  <Route path="/staffMyTaskList" element={<StaffMyTaskList />} />
+                  <Route path="/staffPreviousSubmissions" element={<StaffPreviousSubmissions />} />
+
+                </>
+            ) : (
+              <>
+
+              <Route path="/login" element={<Login handleUserLogin={handleUserLogin} />} />
+
+              <Route path="" element={<Navigate to="/login" replace />} />
+              </>
+          )}
+          </Routes>
+          </main>
+          </div>
+          </ThemeProvider>
+          </ColorModeContext.Provider>
+          );
+          }
+
+export default App;
+
