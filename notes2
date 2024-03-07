@@ -55,8 +55,6 @@ export default Login;
 
 updated***
 // --client/src/global/Sidebar.jsx--
-// --client/src/global/Sidebar.jsx--
-
 import React, { useState } from 'react';
 import { Box, IconButton, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
