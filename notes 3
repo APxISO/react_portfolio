@@ -1,3 +1,46 @@
+***Updated dashboard***
+
+import React from 'react';
+import { Box, Typography, useTheme } from "@mui/material";
+import { tokens } from "../theme";
+import Header from "../components/Header"; // Ensure this component exists or adjust accordingly
+
+const Dashboard = ({ user }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  // Ensure you pass 'user' prop to Dashboard when rendering it in your app
+  
+  return (
+    <Box m="20px" sx={{ color: colors.grey[100] }}>
+      {/* Personalized Greeting */}
+      <Box textAlign="center" mb={5}>
+        <Typography variant="h4" gutterBottom>Welcome to the Dashboard, {user?.username}!</Typography>
+        <Typography variant="h6">You can navigate around the app from the sidebar on the left.</Typography>
+      </Box>
+      
+      {/* Stylish and fun section - Example of what you can add */}
+      <Box textAlign="center">
+        <Header title="Explore" subtitle="Start by exploring the features available to you." />
+        <Typography variant="body1" sx={{ mt: 2 }}>
+          Use the sidebar to access different sections of the app, manage tasks, view progress, and more. Have fun!
+        </Typography>
+      </Box>
+
+      {/* You can also include any other information or widgets you find necessary for your users */}
+    </Box>
+  );
+};
+
+export default Dashboard;
+
+
+
+
+
+***********************
+
+
 dashboard.jsx
 
 import { Box, useTheme } from "@mui/material";
