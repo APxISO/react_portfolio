@@ -36,17 +36,128 @@ const Staff = ({ user }) => {
     fetchUsers();
   }, [user?.parent_tourn]); // Use optional chaining in dependency array as well
 
-  // Columns definition remains the same
+  const columns = [
+    { field: "id", headerName: "ID" },
+    {
+      field: "name",
+      headerName: "NAME",
+      flex: 1,
+      cellClassName: "name-column--cell",
+    },
+    {
+      field: "department",
+      headerName: "DEPARTMENT",
+      flex: 1,
+      type: "string",
+    },
+    {
+      field: "email",
+      headerName: "EMAIL",
+      flex: 1,
+    },
+    {
+      field: "role",
+      headerName: "ROLE",
+      flex: 1,
+    },
+    { 
+      field: "actions", 
+      headerName: "ACTIONS", 
+      flex: 1, 
+      renderCell: (params) => { 
+          return ( 
+              <div> 
+                  <Button 
+                      variant="contained" 
+                      color="secondary" 
+                      onClick={() => {/* Implement Assign Action */}} > 
+                      Assign Task
+                  </Button> 
+              </div> 
+          ); 
+      }, 
+    },
+  ];
 
-  // Render function remains the same
+  return (
+    <Box m="20px">
+      <Header title="STAFF"/>
+
+     {/* SEARCH BAR */}
+     <Box
+        display="flex"
+        backgroundColor={colors.primary[400]}
+        borderRadius="3px"
+        justifyContent="left"
+        width="13%"
+        boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+      >
+        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+        <IconButton type="button" sx={{ p: 1 }}>
+          <SearchIcon />
+        </IconButton>
+      </Box>
+      
+        {/* MAIN GRID */}
+
+      <Box
+        m="40px 0 0 0"
+        height="65vh"
+        boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
+          },
+          "& .name-column--cell": {
+            color: colors.greenAccent[300],
+          },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: colors.blueAccent[700],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: colors.primary[400],
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
+            backgroundColor: colors.blueAccent[700],
+          },
+          "& .MuiCheckbox-root": {
+            color: `${colors.greenAccent[200]} !important`,
+          },
+        }}
+      >
+        <DataGrid checkboxSelection rows={users} columns={columns} /> 
+      </Box>
+    </Box>
+  );
 };
 
 export default Staff;
 
+ERROR
+MUI: The data grid component requires all rows to have a unique `id` property.
+Alternatively, you can use the `getRowId` prop to specify a custom id for each row.
+A row was provided without id in the rows prop:
+{"user_id":6,"username":"Random User 1","email":"random1@example.com","role_name":"Dir","parent_tourn":1}
+Error: MUI: The data grid component requires all rows to have a unique `id` property.
+Alternatively, you can use the `getRowId` prop to specify a custom id for each row.
+A row was provided without id in the rows prop:
+{"user_id":6,"username":"Random User 1","email":"random1@example.com","role_name":"Dir","parent_tourn":1}
+    at checkGridRowIdIsValid (http://localhost:3000/static/js/bundle.js:57633:11)
+    at getRowIdFromRowModel (http://localhost:3000/static/js/bundle.js:57638:3)
+    at createRowsInternalCache (http://localhost:3000/static/js/bundle.js:57655:16)
+    at http://localhost:3000/static/js/bundle.js:58536:85
+    at commitHookEffectListMount (http://localhost:3000/static/js/bundle.js:96535:30)
+    at commitPassiveMountOnFiber (http://localhost:3000/static/js/bundle.js:98028:17)
+    at commitPassiveMountEffects_complete (http://localhost:3000/static/js/bundle.js:98000:13)
+    at commitPassiveMountEffects_begin (http://localhost:3000/static/js/bundle.js:97990:11)
+    at commitPassiveMountEffects (http://localhost:3000/static/js/bundle.js:97980:7)
+    at flushPassiveEffectsImpl (http://localhost:3000/static/js/bundle.js:99863:7)
 
-app.js
-
-<Route path="/staff" element={user ? <Staff user={user} /> : <div>Loading...</div>} />
 
 
 
