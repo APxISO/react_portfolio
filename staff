@@ -25,7 +25,14 @@ const Staff = ({ user }) => {
         const data = await response.json();
         if (data) {
           // Use optional chaining to safely access user.parent_tourn
-          const staffUnderDirector = data.filter(u => u.parent_tourn === user?.parent_tourn);
+          const staffUnderDirector = data.filter(u => u.parent_tourn === user?.parent_tourn).map(user => ({
+            ...user,
+            id:user.user_id,
+            name: user.username,
+            email: user.email,
+            tournament: user.parent_tourn,
+            role: user.role_name
+          }));
           setUsers(staffUnderDirector);
         }
       } catch (error) {
@@ -45,12 +52,6 @@ const Staff = ({ user }) => {
       cellClassName: "name-column--cell",
     },
     {
-      field: "department",
-      headerName: "DEPARTMENT",
-      flex: 1,
-      type: "string",
-    },
-    {
       field: "email",
       headerName: "EMAIL",
       flex: 1,
@@ -59,6 +60,12 @@ const Staff = ({ user }) => {
       field: "role",
       headerName: "ROLE",
       flex: 1,
+    },
+    {
+      field: "tournament",
+      headerName: "TOURNAMENT",
+      flex: 1,
+      type: "string",
     },
     { 
       field: "actions", 
@@ -137,26 +144,6 @@ const Staff = ({ user }) => {
 };
 
 export default Staff;
-
-ERROR
-MUI: The data grid component requires all rows to have a unique `id` property.
-Alternatively, you can use the `getRowId` prop to specify a custom id for each row.
-A row was provided without id in the rows prop:
-{"user_id":6,"username":"Random User 1","email":"random1@example.com","role_name":"Dir","parent_tourn":1}
-Error: MUI: The data grid component requires all rows to have a unique `id` property.
-Alternatively, you can use the `getRowId` prop to specify a custom id for each row.
-A row was provided without id in the rows prop:
-{"user_id":6,"username":"Random User 1","email":"random1@example.com","role_name":"Dir","parent_tourn":1}
-    at checkGridRowIdIsValid (http://localhost:3000/static/js/bundle.js:57633:11)
-    at getRowIdFromRowModel (http://localhost:3000/static/js/bundle.js:57638:3)
-    at createRowsInternalCache (http://localhost:3000/static/js/bundle.js:57655:16)
-    at http://localhost:3000/static/js/bundle.js:58536:85
-    at commitHookEffectListMount (http://localhost:3000/static/js/bundle.js:96535:30)
-    at commitPassiveMountOnFiber (http://localhost:3000/static/js/bundle.js:98028:17)
-    at commitPassiveMountEffects_complete (http://localhost:3000/static/js/bundle.js:98000:13)
-    at commitPassiveMountEffects_begin (http://localhost:3000/static/js/bundle.js:97990:11)
-    at commitPassiveMountEffects (http://localhost:3000/static/js/bundle.js:97980:7)
-    at flushPassiveEffectsImpl (http://localhost:3000/static/js/bundle.js:99863:7)
 
 
 
