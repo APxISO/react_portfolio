@@ -1,3 +1,56 @@
+current try 330pm:
+import React, { useEffect, useState } from 'react';
+import { Box, useTheme, IconButton, Button } from "@mui/material";
+import InputBase from "@mui/material/InputBase";
+import { DataGrid } from "@mui/x-data-grid";
+import { tokens } from "../../../theme";
+import Header from "../../../components/Header";
+import SearchIcon from "@mui/icons-material/Search";
+
+const Staff = ({ user }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    // Guard clause to check if user or user.parent_tourn is undefined
+    if (!user || typeof user.parent_tourn === 'undefined') {
+      console.log('User data is not yet available');
+      return;
+    }
+
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/users');
+        const data = await response.json();
+        if (data) {
+          // Use optional chaining to safely access user.parent_tourn
+          const staffUnderDirector = data.filter(u => u.parent_tourn === user?.parent_tourn);
+          setUsers(staffUnderDirector);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    
+    fetchUsers();
+  }, [user?.parent_tourn]); // Use optional chaining in dependency array as well
+
+  // Columns definition remains the same
+
+  // Render function remains the same
+};
+
+export default Staff;
+
+
+app.js
+
+<Route path="/staff" element={user ? <Staff user={user} /> : <div>Loading...</div>} />
+
+
+
+********************************************************
 import { Box, Typography, useTheme, IconButton } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { DataGrid } from "@mui/x-data-grid";
