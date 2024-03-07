@@ -236,7 +236,7 @@ export default App;
 updated Satff component:
 
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, useTheme, IconButton, Button } from "@mui/material";
+import { Box, useTheme, IconButton, Button } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
@@ -307,21 +307,102 @@ const Staff = ({ user }) => {
   return (
     <Box m="20px">
       <Header title="STAFF"/>
-      {/* SEARCH BAR */}
-      {/* Existing search bar code */}
+
+     {/* SEARCH BAR */}
+     <Box
+        display="flex"
+        backgroundColor={colors.primary[400]}
+        borderRadius="3px"
+        justifyContent="left"
+        width="13%"
+        boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+      >
+        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+        <IconButton type="button" sx={{ p: 1 }}>
+          <SearchIcon />
+        </IconButton>
+      </Box>
       
-      {/* MAIN GRID */}
+        {/* MAIN GRID */}
+
       <Box
         m="40px 0 0 0"
         height="65vh"
         boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
-        sx={{/* Existing styling */}}
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
+          },
+          "& .name-column--cell": {
+            color: colors.greenAccent[300],
+          },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: colors.blueAccent[700],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: colors.primary[400],
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
+            backgroundColor: colors.blueAccent[700],
+          },
+          "& .MuiCheckbox-root": {
+            color: `${colors.greenAccent[200]} !important`,
+          },
+        }}
       >
-        <DataGrid checkboxSelection rows={users} columns={columns} />
+        <DataGrid checkboxSelection rows={users} columns={columns} /> 
       </Box>
     </Box>
   );
 };
 
 export default Staff;
+
+
+error:
+
+ERROR
+Cannot read properties of null (reading 'parent_tourn')
+TypeError: Cannot read properties of null (reading 'parent_tourn')
+    at Staff (http://localhost:3000/main.2268b7af46145f579277.hot-update.js:57:12)
+    at renderWithHooks (http://localhost:3000/static/js/bundle.js:90571:22)
+    at mountIndeterminateComponent (http://localhost:3000/static/js/bundle.js:93855:17)
+    at beginWork (http://localhost:3000/static/js/bundle.js:95151:20)
+    at HTMLUnknownElement.callCallback (http://localhost:3000/static/js/bundle.js:80167:18)
+    at Object.invokeGuardedCallbackDev (http://localhost:3000/static/js/bundle.js:80211:20)
+    at invokeGuardedCallback (http://localhost:3000/static/js/bundle.js:80268:35)
+    at beginWork$1 (http://localhost:3000/static/js/bundle.js:100132:11)
+    at performUnitOfWork (http://localhost:3000/static/js/bundle.js:99380:16)
+    at workLoopSync (http://localhost:3000/static/js/bundle.js:99303:9)
+ERROR
+Cannot read properties of null (reading 'parent_tourn')
+TypeError: Cannot read properties of null (reading 'parent_tourn')
+    at Staff (http://localhost:3000/main.2268b7af46145f579277.hot-update.js:57:12)
+    at renderWithHooks (http://localhost:3000/static/js/bundle.js:90571:22)
+    at mountIndeterminateComponent (http://localhost:3000/static/js/bundle.js:93855:17)
+    at beginWork (http://localhost:3000/static/js/bundle.js:95151:20)
+    at HTMLUnknownElement.callCallback (http://localhost:3000/static/js/bundle.js:80167:18)
+    at Object.invokeGuardedCallbackDev (http://localhost:3000/static/js/bundle.js:80211:20)
+    at invokeGuardedCallback (http://localhost:3000/static/js/bundle.js:80268:35)
+    at beginWork$1 (http://localhost:3000/static/js/bundle.js:100132:11)
+    at performUnitOfWork (http://localhost:3000/static/js/bundle.js:99380:16)
+    at workLoopSync (http://localhost:3000/static/js/bundle.js:99303:9)
+ERROR
+Cannot read properties of null (reading 'parent_tourn')
+TypeError: Cannot read properties of null (reading 'parent_tourn')
+    at Staff (http://localhost:3000/main.2268b7af46145f579277.hot-update.js:57:12)
+    at renderWithHooks (http://localhost:3000/static/js/bundle.js:90571:22)
+    at mountIndeterminateComponent (http://localhost:3000/static/js/bundle.js:93855:17)
+    at beginWork (http://localhost:3000/static/js/bundle.js:95151:20)
+    at beginWork$1 (http://localhost:3000/static/js/bundle.js:100110:18)
+    at performUnitOfWork (http://localhost:3000/static/js/bundle.js:99380:16)
+    at workLoopSync (http://localhost:3000/static/js/bundle.js:99303:9)
+    at renderRootSync (http://localhost:3000/static/js/bundle.js:99276:11)
+    at recoverFromConcurrentError (http://localhost:3000/static/js/bundle.js:98768:24)
+    at performSyncWorkOnRoot (http://localhost:3000/static/js/bundle.js:98977:24)
 
