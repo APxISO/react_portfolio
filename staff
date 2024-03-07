@@ -1,0 +1,118 @@
+import { Box, Typography, useTheme, IconButton } from "@mui/material";
+import InputBase from "@mui/material/InputBase";
+import { DataGrid } from "@mui/x-data-grid";
+import { tokens } from "../../../theme";
+import { mockDataContacts } from "../../../data/mockData";
+import Header from "../../../components/Header";
+import Button from "@mui/material/Button"; 
+import SearchIcon from "@mui/icons-material/Search";
+
+
+const Staff = () => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
+  const filteredTasks = mockDataContacts.filter(contact => contact.role === "Staff"); const columns = [
+    
+    
+    { field: "id", headerName: "ID" },
+    {
+      field: "name",
+      headerName: "NAME",
+      flex: 1,
+      cellClassName: "name-column--cell",
+    },
+    {
+      field: "department",
+      headerName: "DEPARTMENT",
+      flex: 1,
+      type: "string",
+      
+    },
+    {
+      field: "email",
+      headerName: "EMAIL",
+      flex: 1,
+    },
+    {
+      field: "role",
+      headerName: "ROLE",
+      flex: 1,
+    },
+    { 
+        field: "actions", 
+        headerName: "ACTIONS", 
+        flex: 1, 
+        renderCell: (params) => { 
+            return ( 
+                <div> 
+                    <Button 
+                        variant="contained" 
+                        color="secondary" 
+                        onClick={() => {/* Implement Assign Action */}} > 
+                        Assign Task
+                    </Button> 
+                </div> 
+            ); 
+        }, 
+    }, 
+];
+
+  return (
+    <Box m="20px">
+      <Header title="STAFF"/>
+
+     {/* SEARCH BAR */}
+     <Box
+        display="flex"
+        backgroundColor={colors.primary[400]}
+        borderRadius="3px"
+        justifyContent="left"
+        width="13%"
+        boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+      >
+        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
+        <IconButton type="button" sx={{ p: 1 }}>
+          <SearchIcon />
+        </IconButton>
+      </Box>
+      
+        {/* MAIN GRID */}
+
+      <Box
+        m="40px 0 0 0"
+        height="65vh"
+        boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+        sx={{
+          "& .MuiDataGrid-root": {
+            border: "none",
+          },
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
+          },
+          "& .name-column--cell": {
+            color: colors.greenAccent[300],
+          },
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: colors.blueAccent[700],
+            borderBottom: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            backgroundColor: colors.primary[400],
+          },
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
+            backgroundColor: colors.blueAccent[700],
+          },
+          "& .MuiCheckbox-root": {
+            color: `${colors.greenAccent[200]} !important`,
+          },
+        }}
+      >
+        <DataGrid checkboxSelection rows={filteredTasks} columns={columns} /> 
+      </Box>
+    </Box>
+  );
+};
+
+export default Staff;
