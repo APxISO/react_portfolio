@@ -229,3 +229,99 @@ function App() {
           }
 
 export default App;
+
+
+***************************************
+
+updated Satff component:
+
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, useTheme, IconButton, Button } from "@mui/material";
+import InputBase from "@mui/material/InputBase";
+import { DataGrid } from "@mui/x-data-grid";
+import { tokens } from "../../../theme";
+import Header from "../../../components/Header";
+import SearchIcon from "@mui/icons-material/Search";
+
+const Staff = ({ user }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await fetch('http://localhost:3001/api/users');
+      const data = await response.json();
+      if (data) {
+        // Assuming the 'user' prop contains the director's details including parent_tourn
+        const staffUnderDirector = data.filter(u => u.parent_tourn === user.parent_tourn);
+        setUsers(staffUnderDirector);
+      }
+    };
+    fetchUsers();
+  }, [user.parent_tourn]); // Dependency array to refetch when user.parent_tourn changes
+
+  const columns = [
+    { field: "id", headerName: "ID" },
+    {
+      field: "name",
+      headerName: "NAME",
+      flex: 1,
+      cellClassName: "name-column--cell",
+    },
+    {
+      field: "department",
+      headerName: "DEPARTMENT",
+      flex: 1,
+      type: "string",
+    },
+    {
+      field: "email",
+      headerName: "EMAIL",
+      flex: 1,
+    },
+    {
+      field: "role",
+      headerName: "ROLE",
+      flex: 1,
+    },
+    { 
+      field: "actions", 
+      headerName: "ACTIONS", 
+      flex: 1, 
+      renderCell: (params) => { 
+          return ( 
+              <div> 
+                  <Button 
+                      variant="contained" 
+                      color="secondary" 
+                      onClick={() => {/* Implement Assign Action */}} > 
+                      Assign Task
+                  </Button> 
+              </div> 
+          ); 
+      }, 
+    },
+  ];
+
+  return (
+    <Box m="20px">
+      <Header title="STAFF"/>
+      {/* SEARCH BAR */}
+      {/* Existing search bar code */}
+      
+      {/* MAIN GRID */}
+      <Box
+        m="40px 0 0 0"
+        height="65vh"
+        boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+        sx={{/* Existing styling */}}
+      >
+        <DataGrid checkboxSelection rows={users} columns={columns} />
+      </Box>
+    </Box>
+  );
+};
+
+export default Staff;
+
